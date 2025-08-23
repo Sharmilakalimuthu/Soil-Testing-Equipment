@@ -1,4 +1,3 @@
-
 # 🌱 Soil Testing Equipment (IoT with ESP8266 + ThingSpeak)
 
 This project uses an **ESP8266 (NodeMCU)** to measure soil parameters such as **pH, moisture, temperature, and gas levels**. The collected data is uploaded to **ThingSpeak**, where it can be visualized in real time.
