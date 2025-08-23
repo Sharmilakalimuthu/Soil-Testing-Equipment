@@ -1,0 +1,55 @@
+#include <ESP8266WiFi.h>
+#include <WiFiClient.h>
+#include <ThingSpeak.h>
+
+// WiFi credentials
+const char* ssid = "Your_SSID";
+const char* password = "Your_PASSWORD";
+
+// ThingSpeak settings
+WiFiClient client;
+unsigned long myChannelNumber = 123456;      // Replace with your channel number
+const char* myWriteAPIKey = "YOUR_API_KEY";  // Replace with your Write API Key
+
+// Sensor pins (change according to your wiring)
+#define PH_PIN A0
+#define MOISTURE_PIN D1
+#define TEMP_PIN D2
+#define GAS_PIN D3
+
+void setup() {
+  Serial.begin(115200);
+  WiFi.begin(ssid, password);
+  ThingSpeak.begin(client);
+
+  Serial.println("Connecting to WiFi...");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.print(".");
+  }
+  Serial.println("\nConnected!");
+}
+
+void loop() {
+  // Read sensor values
+  int phValue = analogRead(PH_PIN);
+  int moistureValue = analogRead(MOISTURE_PIN);
+  int tempValue = analogRead(TEMP_PIN);
+  int gasValue = analogRead(GAS_PIN);
+
+  // Print values to Serial Monitor
+  Serial.println("PH: " + String(phValue));
+  Serial.println("Moisture: " + String(moistureValue));
+  Serial.println("Temperature: " + String(tempValue));
+  Serial.println("Gas: " + String(gasValue));
+
+  // Send data to ThingSpeak
+  ThingSpeak.setField(1, phValue);
+  ThingSpeak.setField(2, moistureValue);
+  ThingSpeak.setField(3, tempValue);
+  ThingSpeak.setField(4, gasValue);
+  ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
+
+  // Delay before next reading
+  delay(60000);  // 1 minute
+}
